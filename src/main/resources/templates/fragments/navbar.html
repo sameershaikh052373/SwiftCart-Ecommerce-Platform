@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar Fragment</title>
+</head>
+<body>
+    <!-- User Navbar Fragment -->
+    <nav th:fragment="user-navbar" class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand logo-text" href="/">
+                <i class="fas fa-shopping-bag me-2"></i>Swiftcart
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                    
+                    <!-- User Authentication Links -->
+                    <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/registration">Register</a></li>
+                    <li class="nav-item" th:if="${session.currentUser != null}"><a class="nav-link" href="/logout">Logout</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="/products-by-category">Products</a></li>
+
+                    <!-- My Orders (Only for User Role) -->
+                    <li class="nav-item" th:if="${session.currentUser?.role == 'user'}">
+                        <a class="nav-link" href="/my-orders">
+                            <i class="fas fa-box"></i> My Orders
+                        </a>
+                    </li>
+
+                    <!-- Admin Orders (Only for Admin) -->
+                    <li class="nav-item" th:if="${session.currentUser?.role == 'admin'}">
+                        <a class="nav-link" href="/admin/all-orders">
+                            <i class="fas fa-database"></i> Admin Orders
+                        </a>
+                    </li>
+
+                    <!-- Cart Icon (Only for User Role) -->
+                    <li class="nav-item" th:if="${session.currentUser?.role == 'user'}">
+                        <a class="nav-link" href="/cart/view">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="badge bg-primary ms-1" th:text="${cartCount}">0</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Contact Us Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Contact Us
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/review">Give Reviews</a></li>
+                            <li><a class="dropdown-item" href="/suggestion">Give Suggestions</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Navbar Fragment -->
+    <nav th:fragment="admin-navbar" class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand logo-text" href="/admin/home">
+                <i class="fas fa-shopping-bag me-2"></i>Swiftcart Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/admin/home">Home</a></li>
+                    
+                    <!-- User Authentication Links -->
+                    <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/registration">Register</a></li>
+                    <li class="nav-item" th:if="${session.currentUser != null}"><a class="nav-link" href="/logout">Logout</a></li>
+
+                    <!-- Admin Orders (Only for Admin) -->
+                    <li class="nav-item" th:if="${session.currentUser?.role == 'admin'}">
+                        <a class="nav-link" href="/admin/all-orders">
+                            <i class="fas fa-database"></i> Admin Orders
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item" th:if="${session.currentUser?.role == 'admin'}">
+                        <a class="nav-link" href="/admin/view-suggestions">
+                            <i class="fas fa-lightbulb"></i> View Suggestions
+                        </a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.currentUser?.role == 'admin'}">
+                        <a class="nav-link" href="/admin/categories">
+                            <i class="fas fa-list"></i> Categories
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Navbar Fragment (for login/register pages) -->
+    <nav th:fragment="auth-navbar" class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand logo-text" href="/">
+                <i class="fas fa-shopping-bag me-2"></i>Swiftcart
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                    
+                    <!-- User Authentication Links -->
+                    <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/registration">Register</a></li>
+                    <li class="nav-item" th:if="${session.currentUser != null}"><a class="nav-link" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+</html> 

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Swiftcart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style th:replace="fragments/styles :: common-styles"></style>
+    <style>
+        .container {
+            flex: 1;
+            padding-top: 2rem;
+        }
+
+        .page-title {
+            color: #6c5ce7;
+            margin-bottom: 2rem;
+            position: relative;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #6c5ce7;
+            border-radius: 3px;
+        }
+
+        .about-section {
+            background-color: #e9ecef;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .about-section h3 {
+            color: #6c5ce7;
+            margin-top: 2rem;
+        }
+
+        .about-section p {
+            color: #636e72;
+            margin-top: 0.5rem;
+        }
+
+        /* Carousel Setup */
+        .review-carousel-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .review-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 1rem;
+            padding-bottom: 10px;
+        }
+
+        .testimonial-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            flex: 0 0 32%;
+            scroll-snap-align: start;
+        }
+
+        .testimonial-card h5 {
+            margin-top: 1rem;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .testimonial-card p {
+            color: #636e72;
+        }
+
+        .testimonial-card .text-warning {
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonial-card .text-muted {
+            font-size: 0.85rem;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 35%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            z-index: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background-color: #6c5ce7;
+            color: white;
+        }
+
+        .carousel-btn.left {
+            left: -15px;
+        }
+
+        .carousel-btn.right {
+            right: -15px;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-card {
+                flex: 0 0 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: user-navbar"></nav>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+    <h2 class="page-title">About Our Startup</h2>
+    <div class="about-section">
+        <h3>Our Journey</h3>
+        <p>Swiftcart is a recently established startup in 2025 with the vision of making online shopping seamless. We focus on curating the best choices for our customers, ensuring that every product meets our high-quality standards.</p>
+
+        <h3>Quality Assurance</h3>
+        <p>At Swiftcart, every product goes through <strong>high-level quality checking</strong> and is <strong>verified</strong> before reaching our customers. Our commitment to quality is what makes us stand out from the competition.</p>
+
+        <h3>Customer Trust</h3>
+        <p>Our <strong>great support team</strong> is always available to assist you. With fast response times and excellent feedback management, we ensure every customer feels valued and heard.</p>
+
+        <h3>Why Customers Love Us</h3>
+        <p>From <strong>affordable pricing</strong> to <strong>fast and reliable delivery</strong>, our customers appreciate our services. Our verified products, quality assurance, and strong feedback system make us the preferred choice.</p>
+    </div>
+
+    <!-- REVIEW CAROUSEL SECTION -->
+    <div class="mt-5">
+        <h3 class="text-center text-primary mb-4">Customer Feedback</h3>
+
+        <div th:if="${#lists.isEmpty(topReviews)}" class="text-center text-muted mb-4">
+            <p>No reviews yet.</p>
+        </div>
+
+        <div class="review-carousel-wrapper">
+            <!-- Scroll Left -->
+            <button class="carousel-btn left" onclick="scrollReviews(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- Review Cards -->
+            <div class="review-carousel" id="reviewCarousel">
+                <div th:each="review : ${topReviews}" class="testimonial-card">
+                    <h5 th:text="${review.fullName}">John Doe</h5>
+                    <p th:text="${review.message}">Great product!</p>
+                    <div class="text-warning mb-2">
+                        <span th:each="i : ${#numbers.sequence(1, review.rating)}">
+                            <i class="fas fa-star"></i>
+                        </span>
+                    </div>
+                    <p class="text-muted small" th:text="${#temporals.format(review.submittedAt, 'dd MMM yyyy HH:mm')}"></p>
+                </div>
+            </div>
+
+            <!-- Scroll Right -->
+            <button class="carousel-btn right" onclick="scrollReviews(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/reviews" class="btn btn-outline-primary">View All Reviews</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer th:replace="fragments/footer :: footer"></footer>
+<script th:replace="fragments/footer :: footer-script"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function scrollReviews(direction) {
+        const container = document.getElementById('reviewCarousel');
+        const scrollAmount = container.offsetWidth * 0.33 * direction;
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>

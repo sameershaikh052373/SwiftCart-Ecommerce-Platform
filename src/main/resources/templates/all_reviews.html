@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Reviews - Swiftcart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #2d3436;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            color: #6c5ce7;
+            font-size: 1.8rem;
+        }
+
+        .nav-link {
+            color: #2d3436 !important;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background-color: #6c5ce7;
+            color: white !important;
+        }
+
+        .container {
+            flex: 1;
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .page-title {
+            color: #6c5ce7;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #6c5ce7;
+            border-radius: 3px;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .card-text {
+            color: #636e72;
+        }
+
+        .text-warning i {
+            color: #f1c40f;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #a29bfe;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: #b2b2b2;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-collapse {
+                background: white;
+                border-radius: 0 0 12px 12px;
+                padding: 15px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+    <a class="navbar-brand logo-text" href="/">Swiftcart</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/login">Login</a></li>
+        <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/registration">Register</a></li>
+        <li class="nav-item" th:if="${session.currentUser != null}"><a class="nav-link" href="/logout">Logout</a></li>
+        <li class="nav-item" th:if="${session.currentUser?.role == 'user'}">
+          <a class="nav-link" href="/my-orders"><i class="fas fa-box"></i> My Orders</a>
+        </li>
+        <li class="nav-item" th:if="${session.currentUser?.role == 'user'}">
+          <a class="nav-link" href="/cart/view"><i class="fas fa-shopping-cart"></i> Cart
+            <span class="badge bg-primary ms-1" th:text="${cartCount}">0</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Contact Us
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/review">Give Reviews</a></li>
+            <li><a class="dropdown-item" href="/suggestion">Give Suggestions</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <h2 class="page-title">All Customer Reviews</h2>
+
+    <div th:if="${#lists.isEmpty(allReviews)}" class="text-center text-muted">
+        <p>No reviews found.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4" th:each="review : ${allReviews}">
+            <div class="card h-100 p-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title" th:text="${review.fullName}">John Doe</h5>
+                    <p class="card-text" th:text="${review.message}">Great service!</p>
+                    <div class="text-warning mb-2">
+                        <span th:each="i : ${#numbers.sequence(1, review.rating)}">
+                            <i class="fas fa-star"></i>
+                        </span>
+                    </div>
+                    <p class="text-muted small" th:text="${#temporals.format(review.submittedAt, 'dd MMM yyyy HH:mm')}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container text-center">
+        <div class="social-links mb-3">
+            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <div class="copyright">
+            &copy; <span id="currentYear"></span> Swiftcart. All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Styles Fragment</title>
+</head>
+<body>
+    <!-- Common Styles Fragment -->
+    <style th:fragment="common-styles">
+        body {
+            background-color: #f8f9fa;
+            color: #2d3436;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
+            padding: 0.5rem 0;
+        }
+
+        .navbar-dark {
+            background-color: #343a40 !important;
+            padding: 0.3rem 0;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            color: #6c5ce7;
+            font-size: 1.8rem;
+        }
+
+        .navbar-dark .logo-text {
+            color: #17a2b8;
+        }
+
+        .nav-link {
+            color: #2d3436 !important;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-dark .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: #6c5ce7;
+            color: white !important;
+        }
+
+        .navbar-dark .nav-link:hover, .navbar-dark .nav-link.active {
+            background-color: #17a2b8;
+            color: white !important;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            color: #a29bfe;
+            transform: translateY(-3px);
+        }
+
+        .navbar-dark + footer .social-links a:hover {
+            color: #17a2b8;
+        }
+
+        .copyright {
+            color: #b2b2b2;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .navbar-collapse {
+                background: white;
+                border-radius: 0 0 12px 12px;
+                padding: 15px;
+                margin-top: 10px;
+            }
+
+            .navbar-dark .navbar-collapse {
+                background: #343a40;
+            }
+            
+            .navbar-collapse .nav-link {
+                padding: 8px 0;
+                margin: 5px 0;
+                background-color: transparent !important;
+            }
+            
+            .navbar-collapse .nav-link:hover,
+            .navbar-collapse .nav-link.active {
+                color: #6c5ce7 !important;
+                background-color: transparent !important;
+                text-decoration: underline;
+                text-underline-offset: 5px;
+            }
+
+            .navbar-dark .navbar-collapse .nav-link:hover,
+            .navbar-dark .navbar-collapse .nav-link.active {
+                color: #17a2b8 !important;
+            }
+        }
+    </style>
+</body>
+</html> 

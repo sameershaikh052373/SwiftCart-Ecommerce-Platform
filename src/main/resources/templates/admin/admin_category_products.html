@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Category Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Same styles as user view with button area added */
+        body {
+            background-color: #f8f9fa;
+            color: #2d3436;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
+        }
+        .logo-text {
+            font-weight: 700;
+            color: #6c5ce7;
+            font-size: 1.8rem;
+        }
+        .nav-link {
+            color: #2d3436 !important;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #6c5ce7;
+            color: white !important;
+        }
+        .main-container {
+            flex: 1;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .page-title {
+            color: #6c5ce7;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #6c5ce7;
+            border-radius: 3px;
+        }
+        .products-container {
+            background-color: #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            height: 100%;
+            background-color: white;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: contain;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1rem;
+        }
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            color: #2d3436;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .card-text {
+            color: #636e72;
+            margin-bottom: 0.5rem;
+        }
+        .price {
+            color: #6c5ce7;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .action-buttons {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #f1f2f6;
+        }
+        .btn-warning {
+            background-color: #f1c40f;
+            color: black;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-warning:hover {
+            background-color: #d4ac0d;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            border-radius: 12px 12px 0 0;
+        }
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #a29bfe;
+            transform: translateY(-3px);
+        }
+        .copyright {
+            color: #b2b2b2;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar (same as other pages) -->
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+    <a class="navbar-brand logo-text" href="/">Swiftcart</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/login">Login</a></li>
+        <li class="nav-item" th:if="${session.currentUser == null}"><a class="nav-link" href="/registration">Register</a></li>
+        <li class="nav-item" th:if="${session.currentUser != null}"><a class="nav-link" href="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-container">
+    <h1 class="page-title" th:text="${category.name}">Category Name</h1>
+
+    <div class="products-container">
+     <!-- 🔽 Admin Category Filter -->
+    <form method="get" th:action="@{/admin/category/{id}(id=${category.id})}" class="mb-4 d-flex justify-content-end">
+        <select name="sort" onchange="this.form.submit()" class="form-select w-auto">
+            <option value="">Sort by</option>
+            <option value="priceHigh" th:selected="${param.sort == 'priceHigh'}">Price: High to Low</option>
+            <option value="priceLow" th:selected="${param.sort == 'priceLow'}">Price: Low to High</option>
+            <option value="nameAsc" th:selected="${param.sort == 'nameAsc'}">Alphabetical</option>
+        </select>
+    </form>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="product : ${products}">
+                <div class="card product-card h-100">
+                    <img th:src="${product.image}" class="card-img-top" alt="Image of [[${product.name}]]">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.name}"></h5>
+                        <p class="price">₹<span th:text="${product.price}"></span></p>
+                        <p class="card-text" th:text="${product.description}"></p>
+                    </div>
+                    <div class="action-buttons">
+                        <a th:href="@{'/admin/update/' + ${product.id}}" class="btn btn-warning">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <form th:action="@{'/admin/delete/' + ${product.id}}" method="post" 
+                              onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-1"></i>Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/admin/categories" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Admin Categories
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container text-center">
+        <div class="social-links mb-3">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <div class="copyright">
+            &copy; <span id="currentYear"></span> Swiftcart. All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

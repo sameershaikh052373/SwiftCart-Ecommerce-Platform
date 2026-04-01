@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Products - Swiftcart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style th:replace="fragments/styles :: common-styles"></style>
+    <style>
+
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .page-title {
+            color: #6c5ce7;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #6c5ce7;
+            border-radius: 3px;
+        }
+
+        /* Products Container */
+        .products-container {
+            background-color: #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        /* Product Cards */
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            height: 100%;
+            background-color: white;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: contain;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1rem;
+            background-color: white;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card-title {
+            color: #2d3436;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-text {
+            color: #636e72;
+            margin-bottom: 0.5rem;
+            flex-grow: 1;
+        }
+
+        .price {
+            color: #6c5ce7;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: #6c5ce7;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #5649c0;
+            transform: translateY(-2px);
+        }
+
+        .view-details-btn {
+            margin-top: auto;
+            align-self: flex-start;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #a29bfe;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: #b2b2b2;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .navbar-collapse {
+                background: white;
+                border-radius: 0 0 12px 12px;
+                padding: 15px;
+                margin-top: 10px;
+            }
+            
+            .product-card {
+                margin-bottom: 20px;
+            }
+            
+            .products-container {
+                padding: 1.5rem;
+            }
+            
+            /* Mobile-specific nav link hover styles */
+            .navbar-collapse .nav-link {
+                padding: 8px 0;
+                margin: 5px 0;
+                background-color: transparent !important;
+            }
+            
+            .navbar-collapse .nav-link:hover,
+            .navbar-collapse .nav-link.active {
+                color: #6c5ce7 !important;
+                background-color: transparent !important;
+                text-decoration: underline;
+                text-underline-offset: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav th:replace="fragments/navbar :: user-navbar"></nav>
+
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1 class="page-title" th:text="${category.name}">Category Name</h1>
+        
+        <div class="products-container">
+        <form method="get" th:action="@{'/category/' + ${category.id}}" class="mb-4 d-flex justify-content-end">
+
+
+        <select name="sort" onchange="this.form.submit()" class="form-select w-auto">
+            <option value="">Sort by</option>
+            <option value="priceHigh" th:selected="${param.sort == 'priceHigh'}">Price: High to Low</option>
+            <option value="priceLow" th:selected="${param.sort == 'priceLow'}">Price: Low to High</option>
+            <option value="nameAsc" th:selected="${param.sort == 'nameAsc'}">Alphabetical</option>
+        </select>
+    </form>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="col" th:each="product:${products}">
+                    <div class="card product-card h-100">
+                        <img th:src="${product.image}" class="card-img-top" alt="Image of [[${product.name}]]">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${product.name}"></h5>
+                            <p class="price">₹<span th:text="${product.price}"></span></p>
+                            <p class="card-text" th:text="${product.description}"></p>
+                            <a th:href="@{'/products/' + ${product.id}}" class="btn btn-primary view-details-btn">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="/products-by-category" class="btn btn-primary">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Categories
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="fragments/footer :: footer"></footer>
+    <script th:replace="fragments/footer :: footer-script"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
