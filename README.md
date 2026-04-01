@@ -65,19 +65,19 @@ Entities Used:
 ## 🖼 Screenshots
 
 ### 🏠 Home Page
-![Home](docs/images/home.png)
+![Home](home.png)
 
 ### 🛒 Product Listing
-![Products](docs/images/products.png)
+![Products](products.png)
 
 ### 🛍 Cart Page
-![Cart](docs/images/cart.png)
+![Cart](cart.png)
 
 ### 📦 Order Management
-![Orders](docs/images/orders.png)
+![Orders](orders.png)
 
 ### ⚙ Admin Dashboard
-![Admin](docs/images/admin.png)
+![Admin](admin.png)
 
 ---
 
